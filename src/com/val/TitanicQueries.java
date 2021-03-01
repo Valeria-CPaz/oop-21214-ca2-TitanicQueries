@@ -14,6 +14,9 @@ public class TitanicQueries {
     final String DB_PASSWORD = "280585";
 
     private PreparedStatement getPeopleByName;
+    private PreparedStatement getPeopleByGender;
+    private PreparedStatement getPeopleByAge;
+    private PreparedStatement getPeopleByNameAndGender;
 
     public TitanicQueries() {
 
@@ -25,11 +28,21 @@ public class TitanicQueries {
             String sqlQuery = "select name, gender, age from titanic WHERE name like ?";
             getPeopleByName = con.prepareStatement(sqlQuery);
 
+            // Selecting people by gender
+            sqlQuery = "select name, gender, age from titanic WHERE gender like ?";
+            getPeopleByGender = con.prepareStatement((sqlQuery));
+
+            // Selecting people by age
+            sqlQuery = "select name, gender, age from titanic WHERE age like ?";
+            getPeopleByAge = con.prepareStatement((sqlQuery));
+
+            // Selecting people by age and gender
+            sqlQuery = "select name, gender, age from titanic WHERE name like ? AND gender like ?";
+            getPeopleByNameAndGender = con.prepareStatement((sqlQuery));
+
         } catch (SQLException e) {
 
-
         } catch (Exception e) {
-
 
         }
 
@@ -44,9 +57,9 @@ public class TitanicQueries {
 
             resultSet = getPeopleByName.executeQuery();
 
-            results = new ArrayList<Passenger>();
+            results = new ArrayList<>();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Passenger newPassenger = new Passenger();
                 newPassenger.name = resultSet.getString("name");
                 newPassenger.gender = resultSet.getString("gender");
@@ -55,14 +68,92 @@ public class TitanicQueries {
             }
 
 
-
-
         } catch (SQLException e) {
-
-        } catch (Exception e) {
 
         }
 
         return results;
+    }
+
+    public List<Passenger> getPeopleByGender(String gender) {
+
+        ResultSet resultSet = null;
+        List<Passenger> results = null;
+
+        try {
+
+            getPeopleByGender.setString(1, gender);
+            resultSet = getPeopleByGender.executeQuery();
+
+            results = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Passenger newPassenger = new Passenger();
+                newPassenger.name = resultSet.getString("name");
+                newPassenger.gender = resultSet.getString("gender");
+                newPassenger.age = resultSet.getInt("age");
+                results.add(newPassenger);
+            }
+        } catch (SQLException e) {
+
+        }
+
+        return results;
+
+    }
+
+    public List<Passenger> getPeopleByAge(Integer age) {
+
+        ResultSet resultSet = null;
+        List<Passenger> results = null;
+
+        try {
+
+            getPeopleByAge.setInt(1, age);
+            resultSet = getPeopleByAge.executeQuery();
+
+            results = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Passenger newPassenger = new Passenger();
+                newPassenger.name = resultSet.getString("name");
+                newPassenger.gender = resultSet.getString("gender");
+                newPassenger.age = resultSet.getInt("age");
+                results.add(newPassenger);
+            }
+        } catch (SQLException e) {
+
+        }
+
+        return results;
+
+    }
+
+    public List<Passenger> getPeopleByNameAndGender(String name, String gender) {
+
+        ResultSet resultSet = null;
+        List<Passenger> results = null;
+
+        try {
+
+            getPeopleByNameAndGender.setString(1, "%" + name + "%");
+            getPeopleByNameAndGender.setString(2, gender);
+            resultSet = getPeopleByNameAndGender.executeQuery();
+
+            results = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Passenger newPassenger = new Passenger();
+                newPassenger.name = resultSet.getString("name");
+                newPassenger.gender = resultSet.getString("gender");
+                newPassenger.age = resultSet.getInt("age");
+                results.add(newPassenger);
+            }
+        } catch (SQLException e) {
+
+        }
+
+        return results;
+
     }
 }
