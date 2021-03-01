@@ -36,7 +36,7 @@ public class TitanicQueries {
             sqlQuery = "select name, gender, age from titanic WHERE age like ?";
             getPeopleByAge = con.prepareStatement((sqlQuery));
 
-            // Selecting people by age and gender
+            // Selecting people by name and gender
             sqlQuery = "select name, gender, age from titanic WHERE name like ? AND gender like ?";
             getPeopleByNameAndGender = con.prepareStatement((sqlQuery));
 
@@ -157,3 +157,4 @@ public class TitanicQueries {
 
     }
 }
+
